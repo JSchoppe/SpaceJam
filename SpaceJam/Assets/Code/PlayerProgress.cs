@@ -45,7 +45,7 @@ public class PlayerProgress : MonoBehaviour
     public void TakeDamage(int damage)
     {
         // This makes sure the player has i-frames.
-        if (Time.time - lastHitTime < invulnerabilityTime)
+        if (Time.time - lastHitTime > invulnerabilityTime)
         {
             healthSlider.value -= damage;
             lastHitTime = Time.time;
