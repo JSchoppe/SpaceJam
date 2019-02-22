@@ -31,11 +31,60 @@ public class CameraControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Get the current camera region.
-        //Vector2[] zone = GetCurrentZone();
+        // Get the current camera region of the map.
+        Vector2[] zone = GetCurrentZone();
 
-
+        // Set the camera position to the player (plus its initial offset).
         cam.transform.position = playerTarget.position + offset;
+
+        // -10 is required in the following functions, otherwise the camera moves to
+        // z = 0 (and thus doesn't render some things).
+
+        // Check if the camera is too far to the left.
+        if (cam.transform.position.x - cam.orthographicSize * cam.aspect < zone[0].x)
+        {
+            // Move the camera back to the right.
+            cam.transform.position = new Vector3
+            (
+                zone[0].x + cam.orthographicSize * cam.aspect,
+                cam.transform.position.y,
+                -10
+            );
+        }
+        // Check if the camera is too far to the right
+        else if (cam.transform.position.x + cam.orthographicSize * cam.aspect > zone[1].x)
+        {
+            // Move the camera back to the left.
+            cam.transform.position = new Vector3
+            (
+                zone[1].x - cam.orthographicSize * cam.aspect,
+                cam.transform.position.y,
+                -10
+            );
+        }
+
+        // Check if the camera is too low.
+        if (cam.transform.position.y - cam.orthographicSize < zone[0].y)
+        {
+            // Move the camera back up.
+            cam.transform.position = new Vector3
+            (
+                cam.transform.position.x,
+                zone[0].y + cam.orthographicSize,
+                -10
+            );
+        }
+        // Check if the camera is too high.
+        else if (cam.transform.position.y + cam.orthographicSize > zone[1].y)
+        {
+            // Move the camera back down.
+            cam.transform.position = new Vector3
+            (
+                cam.transform.position.x,
+                zone[1].y - cam.orthographicSize,
+                -10
+            );
+        }
     }
 
     // This code figures out which region of the map the player is currently in.
@@ -54,7 +103,7 @@ public class CameraControl : MonoBehaviour
         }
 
         Debug.Log("Player escaped camera region!");
-        return new Vector2[] { new Vector2(-1000, -1000), new Vector2(1000,1000)};
+        return new Vector2[] { new Vector2(-10000, -10000), new Vector2(10000,10000)};
     }
 
 }
