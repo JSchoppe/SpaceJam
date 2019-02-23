@@ -6,6 +6,9 @@ public class FluctuatingHazard : MonoBehaviour
 {
 
     [SerializeField]
+    bool enabled;
+
+    [SerializeField]
     int hitDamage;
     [SerializeField]
     int knockback;
@@ -47,6 +50,14 @@ public class FluctuatingHazard : MonoBehaviour
     void Update()
     {
 
+        if (enabled) HazardEnabled();
+        else HazardDefault();
+
+    }
+
+    void HazardEnabled()
+    {
+
         // Randomized chance of radius expanding
         // Cast to int to prevent floating values
         if ((int)Random.Range(0, fluctuationChance + 2) == (int)fluctuationMinimumRange)
@@ -61,7 +72,7 @@ public class FluctuatingHazard : MonoBehaviour
         }
         else
         {
-       
+
             // Expand radius
             hitArea.radius = Mathf.Lerp(hitArea.radius, currentHitArea, 0.1f);
 
@@ -76,6 +87,24 @@ public class FluctuatingHazard : MonoBehaviour
             lightReference.intensity = Mathf.Lerp(lightReference.intensity, Random.Range(1, 5), 0.1f);
 
         }
+
+    }
+
+    void HazardDefault()
+    {
+
+        //
+        hitArea.radius = Mathf.Lerp(hitArea.radius, 0.5f, 0.1f);
+
+        // Prepare current scale and final scale
+        Vector3 currentScale = visualReference.transform.localScale;
+        Vector3 finalScale = new Vector3(0.5f * 2, 0.5f * 2, 1);
+
+        //
+        visualReference.transform.localScale = Vector3.Lerp(currentScale, finalScale, 0.1f);
+
+        // Fancy Light Effects
+        lightReference.intensity = Mathf.Lerp(lightReference.intensity, Random.Range(1, 5), 0.1f);
 
     }
 
