@@ -17,6 +17,15 @@ public class PlayerProgress : MonoBehaviour
     [HideInInspector]
     public int GeneratorRoomCollectibles = 0;
 
+    [HideInInspector]
+    public bool GeneratorRoomComplete = false;
+    [HideInInspector]
+    public bool CrewQuartersComplete = false;
+    [HideInInspector]
+    public bool LifeSupportComplete = false;
+    [HideInInspector]
+    public bool EngineRoomComplete = false;
+
     [SerializeField]
     private Slider oxygenSlider;
     [SerializeField]
@@ -50,6 +59,26 @@ public class PlayerProgress : MonoBehaviour
         healthSlider.value = 100;
     }
 
+    // Ends the game when player completes all rooms
+    public void CheckComplete()
+    {
+        if (EngineRoomComplete && GeneratorRoomComplete && LifeSupportComplete && CrewQuartersComplete)
+        {
+            // Insert ending scene here.
+            SceneManager.LoadScene("");
+        }
+    }
+
+    public void HealthUp(int health)
+    {
+        healthSlider.value += health;
+    }
+
+    public void OxygenUp(float seconds)
+    {
+        oxygenSlider.value += seconds;
+    }
+
     public void Update()
     {
         // This is a motherfuckin mess and im sorry
@@ -60,6 +89,10 @@ public class PlayerProgress : MonoBehaviour
         if (!inDeath)
         {
             oxygenSlider.value -= Time.deltaTime;
+            if (oxygenSlider.value <= 0)
+            {
+                inDeath = true;
+            }
         }
         else
         {

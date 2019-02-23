@@ -25,6 +25,12 @@ public class SuctionPoint : MonoBehaviour
             float magnitude = (strength / ratio) * Time.fixedDeltaTime;
             bodyToPull.AddForce(magnitude * (new Vector2(transform.position.x, transform.position.y) - bodyToPull.position).normalized, ForceMode2D.Impulse);
         }
+
+        if (ratio < 0.1)
+        {
+            PlayerProgress player = bodyToPull.GetComponent<PlayerProgress>();
+            player.TakeDamage(99999);
+        }
     }
 
     private void Update()

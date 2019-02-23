@@ -17,26 +17,42 @@ public class Pickup : MonoBehaviour
     [SerializeField]
     private RoomName room;
 
+    [SerializeField]
+    private bool isHealthPickup = false;
+    [SerializeField]
+    private bool isOxygenPickup = false;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // Retrieve the player progress script from the colliding player.
         PlayerProgress prog = collision.gameObject.GetComponent<PlayerProgress>();
 
-        // Update the players progress for a room.
-        switch (room)
+        if (isHealthPickup)
         {
-            case RoomName.CREWQUARTERS:
-                prog.CrewQuartersCollectibles++;
-                break;
-            case RoomName.ENGINE:
-                prog.EngineRoomCollectibles++;
-                break;
-            case RoomName.GENERATOR:
-                prog.GeneratorRoomCollectibles++;
-                break;
-            case RoomName.LIFESUPPORT:
-                prog.LifeSupportCollectibles++;
-                break;
+            prog.HealthUp(25);
+        }
+        else if (isOxygenPickup)
+        {
+            prog.OxygenUp(20);
+        }
+        else
+        {
+            // Update the players progress for a room.
+            switch (room)
+            {
+                case RoomName.CREWQUARTERS:
+                    prog.CrewQuartersCollectibles++;
+                    break;
+                case RoomName.ENGINE:
+                    prog.EngineRoomCollectibles++;
+                    break;
+                case RoomName.GENERATOR:
+                    prog.GeneratorRoomCollectibles++;
+                    break;
+                case RoomName.LIFESUPPORT:
+                    prog.LifeSupportCollectibles++;
+                    break;
+            }
         }
 
         // Remove this collectible.
