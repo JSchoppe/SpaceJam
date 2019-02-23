@@ -9,7 +9,7 @@ public class MainMenu : MonoBehaviour {
     
     public void PlayGame ()
     {
-        SceneManager.LoadScene("JethroScene");
+        SceneManager.LoadScene("MainGameScene");
     }
     public void QuitGame ()
     {
