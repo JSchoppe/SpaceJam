@@ -11,6 +11,7 @@ public class PlayerControl : MonoBehaviour
 
     private bool isGrounded = false;
     private Rigidbody2D playerRB;
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -26,11 +27,27 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetAxis("Vertical") != 0)
         {
             forceToAdd += Input.GetAxis("Vertical") * Vector2.up * playerSpeed * Time.fixedDeltaTime;
+            if (Input.GetAxis("Vertical") < 0)
+            {
+                animator.SetInteger("Direction", 3);
+            }
+            else
+            {
+                animator.SetInteger("Direction", 1);
+            }
         }
 
         if (Input.GetAxis("Horizontal") != 0)
         {
             forceToAdd += Input.GetAxis("Horizontal") * Vector2.right * playerSpeed * Time.fixedDeltaTime;
+            if (Input.GetAxis("Horizontal") < 0)
+            {
+                animator.SetInteger("Direction", 4);
+            }
+            else
+            {
+                animator.SetInteger("Direction", 2);
+            }
         }
 
 
