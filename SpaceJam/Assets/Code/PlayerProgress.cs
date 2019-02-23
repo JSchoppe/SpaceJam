@@ -65,7 +65,7 @@ public class PlayerProgress : MonoBehaviour
         if (EngineRoomComplete && GeneratorRoomComplete && LifeSupportComplete && CrewQuartersComplete)
         {
             // Insert ending scene here.
-            SceneManager.LoadScene("");
+            SceneManager.LoadScene("EndScene");
         }
     }
 
