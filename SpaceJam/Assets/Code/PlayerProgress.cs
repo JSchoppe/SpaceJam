@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerProgress : MonoBehaviour
@@ -28,6 +29,19 @@ public class PlayerProgress : MonoBehaviour
     private float invulnerabilityTime;
     private float lastHitTime = 0;
 
+    [SerializeField]
+    private RawImage gameOverPanel;
+
+    [SerializeField]
+    private Rigidbody2D playerBody;
+
+    [SerializeField]
+    private float deathTransitionLength;
+    private bool inDeath = false;
+    private bool inRespawn = false;
+    private float deathTransitionStartTime;
+
+
     public void Start()
     {
         oxygenSlider.maxValue = maxOxygenTime;
@@ -38,7 +52,50 @@ public class PlayerProgress : MonoBehaviour
 
     public void Update()
     {
-        oxygenSlider.value -= Time.deltaTime;
+        // This is a motherfuckin mess and im sorry
+
+        // ...
+
+        // but it works
+        if (!inDeath)
+        {
+            oxygenSlider.value -= Time.deltaTime;
+        }
+        else
+        {
+            float ratio = (Time.time - deathTransitionStartTime) / deathTransitionLength;
+            // Fade in
+            if (inRespawn)
+            {
+                if (ratio < 1)
+                {
+                    gameOverPanel.color = new Color(0, 0, 0, 1 - ratio);
+                }
+                else
+                {
+                    Time.timeScale = 1;
+                    inDeath = false;
+                    inRespawn = false;
+                    gameOverPanel.color = new Color(0, 0, 0, 0);
+                }
+            }
+            // Fade out
+            else
+            {
+                if (ratio < 1)
+                {
+                    gameOverPanel.color = new Color(0, 0, 0, ratio);
+                }
+                else
+                {
+                    playerBody.position = Vector2.zero;
+                    oxygenSlider.value = oxygenSlider.maxValue;
+                    healthSlider.value = healthSlider.maxValue;
+                    deathTransitionStartTime = Time.time;
+                    inRespawn = true;
+                }
+            }
+        }
     }
 
     // Call this method from other objects to damage the player.
@@ -48,6 +105,15 @@ public class PlayerProgress : MonoBehaviour
         if (Time.time - lastHitTime > invulnerabilityTime)
         {
             healthSlider.value -= damage;
+
+            if (healthSlider.value <= 0)
+            {
+                // Game Over Sequence.
+                Time.timeScale = 0.5f;
+                inDeath = true;
+                deathTransitionStartTime = Time.time;
+            }
+
             lastHitTime = Time.time;
         }
     }
