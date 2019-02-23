@@ -16,6 +16,10 @@ public class TimedHazard : MonoBehaviour
     [SerializeField]
     private float offTime;
 
+    [SerializeField]
+    private float timeOffset;
+    private bool offsetWait = true;
+
     private bool isOn = true;
     private float lastFlipTime = 0;
 
@@ -33,28 +37,40 @@ public class TimedHazard : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (turnsOnAndOff)
+        if (offsetWait)
         {
-            if (isOn)
+            // This block is probably redundant.
+            if (Time.time > timeOffset)
             {
-                if(Time.time - lastFlipTime > onTime)
-                {
-                    isOn = false;
-                    hitbox.enabled = false;
-                    lastFlipTime = Time.time;
-
-                    renderer.color = Color.red;
-                }
+                offsetWait = false;
+                lastFlipTime = Time.time;
             }
-            else
+        }
+        else
+        {
+            if (turnsOnAndOff)
             {
-                if (Time.time - lastFlipTime > offTime)
+                if (isOn)
                 {
-                    isOn = true;
-                    hitbox.enabled = true;
-                    lastFlipTime = Time.time;
+                    if (Time.time - lastFlipTime > onTime)
+                    {
+                        isOn = false;
+                        hitbox.enabled = false;
+                        lastFlipTime = Time.time;
 
-                    renderer.color = Color.green;
+                        renderer.color = new Color(1, 1, 1, 0);
+                    }
+                }
+                else
+                {
+                    if (Time.time - lastFlipTime > offTime)
+                    {
+                        isOn = true;
+                        hitbox.enabled = true;
+                        lastFlipTime = Time.time;
+
+                        renderer.color = new Color(1, 1, 1, 1);
+                    }
                 }
             }
         }
