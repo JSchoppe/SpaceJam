@@ -22,6 +22,9 @@ public class FluctuatingHazard : MonoBehaviour
     [SerializeField]
     GameObject visualReference;
 
+    [SerializeField]
+    Light lightReference;
+
     //
     CircleCollider2D hitArea;
 
@@ -68,6 +71,9 @@ public class FluctuatingHazard : MonoBehaviour
 
             // Lerp to Scale
             visualReference.transform.localScale = Vector3.Lerp(currentScale, finalScale, 0.1f);
+
+            // Fancy Light Effects
+            lightReference.intensity = Mathf.Lerp(lightReference.intensity, Random.Range(1, 5), 0.1f);
 
         }
 
